@@ -1,0 +1,21 @@
+package com.example.demo.controller;
+
+import com.example.demo.Entity.ApartmentDo;
+import com.example.demo.service.ApartmentService;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/api/apartment")
+@AllArgsConstructor
+public class ApartmentController {
+    private final ApartmentService apartmentService;
+
+
+    @PostMapping("/add")
+    public void saveApartment(ApartmentDo apartment){
+         apartmentService.addApartment(apartment);
+    }
+}
