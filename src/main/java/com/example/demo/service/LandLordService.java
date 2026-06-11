@@ -34,4 +34,8 @@ public class LandLordService {
         return landLordRepository.findAll().stream().collect(Collectors.toMap(LandLordDo::getId, landLord -> landLord));
 
     }
+
+    public void truncateLandLord(){
+        landLordRepository.truncateLandLord();
+    }
 }

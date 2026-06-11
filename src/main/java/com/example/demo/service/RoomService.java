@@ -26,4 +26,8 @@ public class RoomService {
     public RoomDo getRoomById(Long id){
         return roomRepository.findById(id).orElse(null);
     }
+
+    public void truncateRoom(){
+        roomRepository.truncateRoom();
+    }
 }

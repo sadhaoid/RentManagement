@@ -27,4 +27,8 @@ public class TenantService {
     public TenantDo getTenantById(Long id){
         return tenantRepository.findById(id).orElse(null);
     }
+
+    public void truncateTenant(){
+        tenantRepository.truncateTenant();
+    }
 }

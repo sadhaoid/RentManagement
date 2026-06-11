@@ -25,4 +25,8 @@ public class ApartmentService {
     public ApartmentDo getApartmentById(Long id){
         return apartmentRepository.findById(id).orElse(null);
     }
+
+    public void truncateApartment(){
+        apartmentRepository.truncateApartment();
+    }
 }
