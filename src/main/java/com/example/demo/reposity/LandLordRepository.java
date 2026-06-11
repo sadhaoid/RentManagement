@@ -1,6 +1,6 @@
-package com.example.demo.Reposity;
+package com.example.demo.reposity;
 
-import com.example.demo.Entity.LandLordDo;
+import com.example.demo.entity.LandLordDo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LandLordRepository extends JpaRepository<LandLordDo,Long> {

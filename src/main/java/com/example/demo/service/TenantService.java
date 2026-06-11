@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.Entity.TenantDo;
-import com.example.demo.Reposity.TenantRepository;
+import com.example.demo.entity.TenantDo;
+import com.example.demo.reposity.TenantRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

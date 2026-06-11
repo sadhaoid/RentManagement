@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.Entity.RoomDo;
-import com.example.demo.Reposity.RoomRepository;
+import com.example.demo.entity.RoomDo;
+import com.example.demo.reposity.RoomRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

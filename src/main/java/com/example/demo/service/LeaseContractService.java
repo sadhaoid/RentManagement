@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.Reposity.LandLordRepository;
+import com.example.demo.reposity.LandLordRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

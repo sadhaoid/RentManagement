@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.Entity.ApartmentDo;
+import com.example.demo.entity.ApartmentDo;
 import com.example.demo.service.ApartmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
