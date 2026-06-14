@@ -5,6 +5,9 @@ import com.example.demo.reposity.RoomRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class RoomService {
@@ -29,5 +32,9 @@ public class RoomService {
 
     public void truncateRoom(){
         roomRepository.truncateRoom();
+    }
+
+    public Map<Long, RoomDo> getRoomMap() {
+        return roomRepository.findAll().stream().collect(Collectors.toMap(RoomDo::getId, room -> room));
     }
 }

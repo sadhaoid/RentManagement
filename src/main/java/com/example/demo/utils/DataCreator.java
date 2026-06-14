@@ -11,8 +11,10 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Random;
+import org.apache.commons.collections4.ListUtils;
 
 @Component
 @AllArgsConstructor
@@ -98,30 +100,18 @@ public class DataCreator {
             .updateTime(LocalDateTime.now())
             .build());
         }
+        normalLoopCreator();
+        leaseContractService.truncateLeaseContract();
+        doubleLoopCreator();
+        leaseContractService.truncateLeaseContract();
+        apachePartition();
 
-
-        for (int i = 0; i < 100000; i++) {
-            leaseContractService.addLeaseContract(LeaseContractDo.builder()
-                    .contractNo(Long.valueOf(faker.number().digits(15)))
-                    .tenantId(random.nextLong(2000) + 1)
-                    .roomId(random.nextLong(5000) + 1)
-                    .startDate(LocalDateTime.ofInstant(faker.timeAndDate().between(START.atZone(ZoneId.systemDefault()).toInstant(),END.atZone(ZoneId.systemDefault()).toInstant()), ZoneId.systemDefault()))
-                    .endDate(LocalDateTime.ofInstant(faker.timeAndDate().between(START.atZone(ZoneId.systemDefault()).toInstant(),END.atZone(ZoneId.systemDefault()).toInstant()), ZoneId.systemDefault()))
-                    .monthlyRent(faker.number().randomDouble(2, 1000, 5000))
-                    .deposit(500.0)
-                    .payDay(random.nextInt(1,28))
-                    .payCycle(random.nextInt(1,4))
-                    .status(random.nextInt(4))
-                    .signDate(LocalDateTime.ofInstant(faker.timeAndDate().between(START.atZone(ZoneId.systemDefault()).toInstant(),END.atZone(ZoneId.systemDefault()).toInstant()), ZoneId.systemDefault()))
-                    .createTime(LocalDateTime.now())
-                    .updateTime(LocalDateTime.now())
-                    .build());
-        }
     }
 
-    public void batchCreator() {
-        ArrayList<LeaseContractDo> leaseContracts = new ArrayList<LeaseContractDo>();
-        for (long i = 1; i < 50; i++) {
+    public void doubleLoopCreator() {
+        Long startTime = System.currentTimeMillis();
+        for (long i = 0; i < 50; i++) {
+            ArrayList<LeaseContractDo> leaseContracts = new ArrayList<>();
             for (int j = 0; j < 2000; j++) {
                 leaseContracts.add(LeaseContractDo.builder()
                         .contractNo(Long.valueOf(faker.number().digits(15)))
@@ -140,8 +130,57 @@ public class DataCreator {
                         .build());
             }
             leaseContractService.saveAll(leaseContracts);
-
         }
+        Long endTime = System.currentTimeMillis();
+        System.out.println("双循环批量插入耗时: " + (endTime - startTime) + "ms");
+    }
 
+
+    public void apachePartition() {
+        Long startTime = System.currentTimeMillis();
+        ArrayList<LeaseContractDo> partitionList = new ArrayList<>();
+        for (int j = 0; j < 100000; j++) {
+            partitionList.add(LeaseContractDo.builder()
+                    .contractNo(Long.valueOf(faker.number().digits(15)))
+                    .tenantId(random.nextLong(2000) + 1)
+                    .roomId(random.nextLong(5000) + 1)
+                    .startDate(LocalDateTime.ofInstant(faker.timeAndDate().between(START.atZone(ZoneId.systemDefault()).toInstant(),END.atZone(ZoneId.systemDefault()).toInstant()), ZoneId.systemDefault()))
+                    .endDate(LocalDateTime.ofInstant(faker.timeAndDate().between(START.atZone(ZoneId.systemDefault()).toInstant(),END.atZone(ZoneId.systemDefault()).toInstant()), ZoneId.systemDefault()))
+                    .monthlyRent(faker.number().randomDouble(2, 1000, 5000))
+                    .deposit(500.0)
+                    .payDay(random.nextInt(1,28))
+                    .payCycle(random.nextInt(1,4))
+                    .status(random.nextInt(4))
+                    .signDate(LocalDateTime.ofInstant(faker.timeAndDate().between(START.atZone(ZoneId.systemDefault()).toInstant(),END.atZone(ZoneId.systemDefault()).toInstant()), ZoneId.systemDefault()))
+                    .createTime(LocalDateTime.now())
+                    .updateTime(LocalDateTime.now())
+                    .build());
+        }
+        ListUtils.partition(partitionList,2000).forEach(leaseContractService::saveAll);
+        Long endTime = System.currentTimeMillis();
+        System.out.println("分片批量插入耗时: " + (endTime - startTime) + "ms");
+    }
+
+    public void normalLoopCreator() {
+        Long startTime = System.currentTimeMillis();
+        for (int i = 0; i < 100000; i++) {
+            leaseContractService.addLeaseContract(LeaseContractDo.builder()
+                    .contractNo(Long.valueOf(faker.number().digits(15)))
+                    .tenantId(random.nextLong(2000) + 1)
+                    .roomId(random.nextLong(5000) + 1)
+                    .startDate(LocalDateTime.ofInstant(faker.timeAndDate().between(START.atZone(ZoneId.systemDefault()).toInstant(),END.atZone(ZoneId.systemDefault()).toInstant()), ZoneId.systemDefault()))
+                    .endDate(LocalDateTime.ofInstant(faker.timeAndDate().between(START.atZone(ZoneId.systemDefault()).toInstant(),END.atZone(ZoneId.systemDefault()).toInstant()), ZoneId.systemDefault()))
+                    .monthlyRent(faker.number().randomDouble(2, 1000, 5000))
+                    .deposit(500.0)
+                    .payDay(random.nextInt(1,28))
+                    .payCycle(random.nextInt(1,4))
+                    .status(random.nextInt(4))
+                    .signDate(LocalDateTime.ofInstant(faker.timeAndDate().between(START.atZone(ZoneId.systemDefault()).toInstant(),END.atZone(ZoneId.systemDefault()).toInstant()), ZoneId.systemDefault()))
+                    .createTime(LocalDateTime.now())
+                    .updateTime(LocalDateTime.now())
+                    .build());
+        }
+        Long endTime = System.currentTimeMillis();
+        System.out.println("单条插入耗时: " + (endTime - startTime) + "ms");
     }
 }

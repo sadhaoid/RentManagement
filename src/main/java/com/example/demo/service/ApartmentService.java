@@ -5,6 +5,9 @@ import com.example.demo.reposity.ApartmentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class ApartmentService {
@@ -28,5 +31,9 @@ public class ApartmentService {
 
     public void truncateApartment(){
         apartmentRepository.truncateApartment();
+    }
+
+    public Map<Long, ApartmentDo> getApartmentMap() {
+        return apartmentRepository.findAll().stream().collect(Collectors.toMap(ApartmentDo::getId, apartment -> apartment));
     }
 }

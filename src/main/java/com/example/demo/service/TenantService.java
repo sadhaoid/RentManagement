@@ -5,6 +5,9 @@ import com.example.demo.reposity.TenantRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class TenantService {
@@ -30,5 +33,9 @@ public class TenantService {
 
     public void truncateTenant(){
         tenantRepository.truncateTenant();
+    }
+
+    public Map<Long, TenantDo> getTenantMap() {
+        return tenantRepository.findAll().stream().collect(Collectors.toMap(TenantDo::getId, tenant -> tenant));
     }
 }
