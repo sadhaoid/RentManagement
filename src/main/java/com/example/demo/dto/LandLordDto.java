@@ -13,10 +13,7 @@ import java.time.LocalDateTime;
 
 @Builder
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class LandLordDto {
-    @Id
     Long id;
     String name;
     String phone;

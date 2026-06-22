@@ -3,13 +3,14 @@ package com.example.demo.service;
 import com.example.demo.entity.ApartmentDo;
 import com.example.demo.reposity.ApartmentRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ApartmentService {
     private final ApartmentRepository apartmentRepository;
     //公寓CRUD

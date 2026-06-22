@@ -18,6 +18,7 @@ import org.apache.commons.collections4.ListUtils;
 
 @Component
 @AllArgsConstructor
+//@RequiredArgsConstructor
 public class DataCreator {
     private final LandLordService landLordService;
     private final ApartmentService apartmentService;
@@ -32,7 +33,7 @@ public class DataCreator {
     static final LocalDateTime START = LocalDateTime.of(2020, 1, 1, 0, 0);
     static final LocalDateTime END = LocalDateTime.of(2025, 12, 31 ,23,59);
 
-    @PostConstruct
+//    @PostConstruct
     public void landLordCreator(){
         leaseContractService.truncateLeaseContract();
         roomService.truncateRoom();
