@@ -30,13 +30,6 @@ public class ThreadPoolPractice {
 
         List<List<LeaseContractDo>> lists = partitionContract();
 
-//        executor.submit(() -> {
-//            List<LeaseContractDo> list = lists.getFirst().stream().filter(leaseContractDo -> leaseContractDo.getEndDate().isAfter(validateDate)).toList();
-//            concurrentCollection.addAll(list);
-//            countDownLatch.countDown();
-
-
-
          for (int i = 0; i < lists.size(); i++) {
              int finalI = i;
              executor.submit(() -> {

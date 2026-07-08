@@ -2,12 +2,14 @@ package com.example.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.converter.json.GsonBuilderUtils;
 
 @SpringBootApplication
 public class RentManagement {
 
-	public static void main(String[] args) {
-		SpringApplication.run(RentManagement.class, args);
+    void main() {
+        System.out.println("Starting AiXiaoyuServerApplication...");
+		SpringApplication.run(RentManagement.class);
 	}
 
 }

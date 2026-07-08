@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.entity.ApartmentDo;
 import com.example.demo.service.ApartmentService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/apartment")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ApartmentController {
     private final ApartmentService apartmentService;
 
