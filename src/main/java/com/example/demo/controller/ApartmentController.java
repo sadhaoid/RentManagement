@@ -3,11 +3,10 @@ package com.example.demo.controller;
 import com.example.demo.entity.ApartmentDo;
 import com.example.demo.service.ApartmentService;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/apartment")
@@ -19,5 +18,10 @@ public class ApartmentController {
     @PostMapping("/add")
     public void saveApartment(ApartmentDo apartment){
          apartmentService.addApartment(apartment);
+    }
+
+    @GetMapping("/get/{id}")
+    public void getApartment(@PathVariable Long id){
+        apartmentService.getApartmentById(id);
     }
 }

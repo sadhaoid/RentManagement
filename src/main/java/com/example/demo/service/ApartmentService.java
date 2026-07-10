@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.ApartmentDo;
+import com.example.demo.exception.BusinessExceptionDemo;
 import com.example.demo.reposity.ApartmentRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class ApartmentService {
     }
 
     public ApartmentDo getApartmentById(Long id){
-        return apartmentRepository.findById(id).orElse(null);
+        return apartmentRepository.findById(id).orElseThrow(() -> new BusinessExceptionDemo("Apartment not found with id: " + id));
     }
 
     public void truncateApartment(){
