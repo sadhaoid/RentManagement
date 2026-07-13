@@ -12,7 +12,7 @@ public class BusinessExceptionDemo extends RuntimeException{
         this(message, "BUSINESS_ERROR");
     }
 
-    public BusinessExceptionDemo(String errorCode, String message){
+    public BusinessExceptionDemo(String message, String errorCode){
         super(message);
         this.errorCode = errorCode;
     }

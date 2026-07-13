@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -37,5 +38,9 @@ public class ApartmentService {
 
     public Map<Long, ApartmentDo> getApartmentMap() {
         return apartmentRepository.findAll().stream().collect(Collectors.toMap(ApartmentDo::getId, apartment -> apartment));
+    }
+
+    public List<ApartmentDo> getApartmentList(Long landlordId){
+        return apartmentRepository.findByLandlordId(landlordId);
     }
 }
