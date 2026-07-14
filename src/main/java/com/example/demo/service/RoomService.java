@@ -58,11 +58,12 @@ public class RoomService {
 
         //todo stream转化
         List<RoomWithTenantDto> resultList = new ArrayList<>();
+
         for (RoomDo room: roomByApartmentId) {
             List<LeaseContractDo> byRoomIdAndStatus = leaseContractRepository.findByRoomIdAndStatus(room.getId(), 1);
             for (LeaseContractDo leaseContractDo: byRoomIdAndStatus){
                 TenantDo byId = tenantRepository.findAllById(leaseContractDo.getTenantId());
-                resultList.add(RoomWithTenantDto
+                 resultList.add(RoomWithTenantDto
                         .builder()
                         .roomId(room.getId())
                         .apartmentId(room.getApartmentId())
