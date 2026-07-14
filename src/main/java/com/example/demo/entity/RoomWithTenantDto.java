@@ -1,8 +1,10 @@
 package com.example.demo.entity;
 
 import lombok.Builder;
+import lombok.Data;
 
 @Builder
+@Data
 public class RoomWithTenantDto {
     Long roomId;
     Long apartmentId;
