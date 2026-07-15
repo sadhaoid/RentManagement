@@ -32,19 +32,4 @@ public class LandLordDo {
     LocalDateTime createTime;
     @Column(name = "updated_at")
     LocalDateTime updateTime;
-
-    public LandLordDto  toLandLordDto() {
-        return LandLordDto.builder()
-                .id(this.getId())
-                .name(this.getName())
-                .phone(this.getPhone())
-                .sex(this.getSex())
-                .idCard(this.getIdCard())
-                .email(this.getEmail())
-                .bankAccount(this.getBankAccount())
-                .status(this.getStatus())
-                .createTime(this.getCreateTime())
-                .updateTime(this.getUpdateTime())
-                .build();
-    }
 }

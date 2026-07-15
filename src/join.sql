@@ -25,10 +25,10 @@ GROUP BY landlord_id
 ORDER BY  landlord_id;
 
 --需要理解为什么需要distinct
-SELECT b.name,COUNT(DISTINCT a."id") as apartment_count ,COUNT(DISTINCT c."id") as room_count,COUNT(d."id") AS contract_count
-from apartment a
-         JOIN landlord b ON a.landlord_id = b."id"
-         JOIN room c ON a."id" = c.apartment_id
+SELECT a.name,COUNT(DISTINCT b."id") as apartment_count ,COUNT(DISTINCT c."id") as room_count,COUNT(d."id") AS contract_count
+from apartment b
+         JOIN landlord a ON b.landlord_id = a."id"
+         JOIN room c ON b."id" = c.apartment_id
          JOIN lease_contract d ON c.id = d.room_id
 WHERE d.status = 1
-GROUP BY b.name
+GROUP BY a.name

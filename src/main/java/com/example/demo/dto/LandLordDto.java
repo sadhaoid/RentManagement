@@ -14,15 +14,8 @@ import java.time.LocalDateTime;
 @Builder
 @Data
 public class LandLordDto {
-    Long id;
     String name;
-    String phone;
-    //1=male, 2=female
-    Integer sex;
-    String idCard;
-    String email;
-    String bankAccount;
-    Integer status;
-    LocalDateTime createTime;
-    LocalDateTime updateTime;
+    Long apartmentCount;
+    Long roomCount;
+    Long contractCount;
 }

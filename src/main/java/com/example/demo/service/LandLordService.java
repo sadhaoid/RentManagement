@@ -1,10 +1,12 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.LandLordDto;
 import com.example.demo.entity.LandLordDo;
 import com.example.demo.reposity.LandLordRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -33,6 +35,10 @@ public class LandLordService {
     public Map<Long,LandLordDo> getLandLordMap(){
         return landLordRepository.findAll().stream().collect(Collectors.toMap(LandLordDo::getId, landLord -> landLord));
 
+    }
+
+    public List<LandLordDto> summaryLandLordDetails() {
+       return landLordRepository.findLandLordStats();
     }
 
     public void truncateLandLord(){
