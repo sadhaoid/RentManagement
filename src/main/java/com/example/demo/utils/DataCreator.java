@@ -41,7 +41,7 @@ public class DataCreator {
         tenantService.truncateTenant();
         landLordService.truncateLandLord();
 
-        for (long i = 1; i < 101; i++) {
+        for (long i = 0; i < 100; i++) {
             landLordService.addLandLord(LandLordDo.builder()
                     .name(faker.name().fullName())
                     .phone(faker.number().digits(13))
@@ -55,7 +55,7 @@ public class DataCreator {
                     .build());
         }
 
-        for (long i = 1; i < 501; i++) {
+        for (long i = 0; i < 500; i++) {
             apartmentService.addApartment(ApartmentDo.builder()
                     .landlordId(random.nextLong(100) + 1)
                     .communityName(faker.community().character())
@@ -75,7 +75,7 @@ public class DataCreator {
                     .build());
         }
 
-        for (long i = 1; i < 2001; i++) {
+        for (long i = 0; i < 2000; i++) {
             tenantService.addTenant(TenantDo.builder()
                     .name(faker.name().fullName())
                     .phone(faker.number().digits(13))
