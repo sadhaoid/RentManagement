@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -36,37 +35,62 @@ public class OrderPractice {
         ));
 
 
-        List<Order> excludeRefunded = orders.stream().filter(order -> !(order.getStatus().equals("REFUNDED"))).toList();
+//        List<CategoryStats> categoryStatsList = new ArrayList<>();
 
+//        List<Order> excludeRefunded = orders.stream().filter(order -> !(order.getStatus().equals("REFUNDED"))).toList();
 
-        Map<String, List<Order>> collected = excludeRefunded.stream().collect(Collectors.groupingBy(Order::getCategory));
-
-        List<CategoryStats> categoryStatsList = new ArrayList<>();
-        for (Map.Entry<String, List<Order>> entry: collected.entrySet()){
-            String category = entry.getKey();
-            List<Order> orderList = entry.getValue();
-            double sumAmount = orderList.stream().mapToDouble(Order::getAmount).sum();
-            int sumQuantity = orderList.stream().mapToInt(Order::getQuantity).sum();
-            int sumOrders = orderList.size();
-            if (sumAmount >= 1000){
-                categoryStatsList.add(CategoryStats
-                        .builder()
-                        .category(category)
-                        .totalAmount(sumAmount)
-                        .totalQuantity(sumQuantity)
-                        .totalOrders(sumOrders)
-                        .build());
-            }
-
-        }
-
-        categoryStatsList.sort(Comparator.comparingDouble(CategoryStats::getTotalAmount).reversed());
-
-        List<String> result = categoryStatsList
+//        Map<String, List<Order>> collected = excludeRefunded.stream().collect(Collectors.groupingBy(Order::getCategory));
+//
+//        List<CategoryStats> categoryStatsList = new ArrayList<>();
+//        for (Map.Entry<String, List<Order>> entry: collected.entrySet()){
+//            String category = entry.getKey();
+//            List<Order> orderList = entry.getValue();
+//            double sumAmount = orderList.stream().mapToDouble(Order::getAmount).sum();
+//            int sumQuantity = orderList.stream().mapToInt(Order::getQuantity).sum();
+//            int sumOrders = orderList.size();
+//            if (sumAmount >= 1000){
+//                categoryStatsList.add(CategoryStats
+//                        .builder()
+//                        .category(category)
+//                        .totalAmount(sumAmount)
+//                        .totalQuantity(sumQuantity)
+//                        .totalOrders(sumOrders)
+//                        .build());
+//            }
+//
+//        }
+//
+//        categoryStatsList.sort(Comparator.comparingDouble(CategoryStats::getTotalAmount).reversed());
+//
+//        List<String> result = categoryStatsList
+//                .stream()
+//                .map(categoryStats
+//                        -> categoryStats.getCategory() + ":" + categoryStats.getTotalAmount() + ":" + categoryStats.getTotalQuantity()).toList();
+//
+        List<String> result = orders
                 .stream()
-                .map(categoryStats
-                        -> categoryStats.getCategory() + ":" + categoryStats.getTotalAmount() + ":" + categoryStats.getTotalQuantity()).toList();
-
+                .filter(order -> !(order.getStatus().equals("REFUNDED")))
+                .collect(Collectors.groupingBy(Order::getCategory))
+                .entrySet()
+                .stream()
+                .map(stringListEntry -> {
+                    String category = stringListEntry.getKey();
+                    List<Order> orderList = stringListEntry.getValue();
+                    double sumAmount = orderList.stream().mapToDouble(Order::getAmount).sum();
+                    int sumQuantity = orderList.stream().mapToInt(Order::getQuantity).sum();
+                    int sumOrders = orderList.size();
+                    return CategoryStats
+                            .builder()
+                            .category(category)
+                            .totalAmount(sumAmount)
+                            .totalQuantity(sumQuantity)
+                            .totalOrders(sumOrders)
+                            .build();
+                })
+                .filter(categoryStats -> categoryStats.getTotalAmount() >= 1000)
+                .sorted(Comparator.comparingDouble(CategoryStats::getTotalAmount).reversed())
+                .map(categoryStats -> String.format("%s:%.2f:%d", categoryStats.getCategory(), categoryStats.getTotalAmount(), categoryStats.getTotalOrders()))
+                .toList();
         System.out.println(result);
 
     }

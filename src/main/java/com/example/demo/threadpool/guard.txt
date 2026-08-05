@@ -1,0 +1,68 @@
+Step 1 伪代码:手动构造 ThreadPoolExecutor
+// 在配置类里
+CLASS ThreadPoolConfig:
+
+    METHOD 创建线程池() RETURNS ThreadPoolExecutor:
+        核心线程数 = ？        // 想清楚填多少
+        最大线程数 = ？        // 想清楚填多少，和核心线程数关系是什么
+        空闲存活时间 = ？
+        时间单位 = ？
+
+        工作队列 = 某种有界阻塞队列(容量 = ？)   // 不能是无界的
+
+        拒绝策略 = AbortPolicy 或 CallerRunsPolicy   // 自己选一个，想清楚为什么
+
+        RETURN new ThreadPoolExecutor(
+            核心线程数,
+            最大线程数,
+            空闲存活时间,
+            时间单位,
+            工作队列,
+            拒绝策略
+        )
+
+注意:这里我故意把每个参数都写成"？"或者只给出选择范围,不是偷懒——如果我直接告诉你"核心线程数填 4、队列容量填 1000",你这次作业就变成抄我的答案了,下次换个场景(比如 IO 密集型任务)你还是不知道怎么选。这几个值你自己先给出一个数字,附带一句"我为什么这么选"的理由,贴给我,我帮你核对这个理由站不站得住脚。
+
+Step 2 伪代码:注册成 Spring Bean + 优雅关闭
+// 配置类里，把 Step 1 的方法变成一个 Bean
+CLASS ThreadPoolConfig:
+
+    @Bean
+    METHOD 创建线程池() RETURNS ThreadPoolExecutor:
+        ...（Step 1 的逻辑）
+
+
+// ThreadPoolPractice 类里，改成被 Spring 管理、依赖注入线程池
+@Component
+CLASS ThreadPoolPractice:
+
+    FIELD leaseContractRepository   // 已有的
+    FIELD executor: ThreadPoolExecutor   // 新增，不再是方法里 new 的局部变量
+
+    CONSTRUCTOR(leaseContractRepository, executor):
+        this.leaseContractRepository = leaseContractRepository
+        this.executor = executor          // 通过构造函数注入，而不是内部 new
+
+    METHOD threadPool():
+        分片列表 = partitionContract()
+        计数器 = new CountDownLatch(分片列表.size())   // 顺手把 Step 3 也改了
+
+        FOR EACH 分片 IN 分片列表:
+            executor.submit(() -> {
+                处理这个分片，过滤后加入 concurrentCollection
+                计数器.countDown()
+            })
+
+        计数器.await()
+        // 注意：这里不再 executor.shutdown()
+        // 为什么？想一下这个 executor 现在是谁的、生命周期该由谁决定关闭时机
+
+    @PreDestroy         // 新增一个方法，专门负责应用关闭时的清理
+    METHOD 关闭线程池():
+        executor.shutdown()   // 或者更严谨地处理还没跑完的任务，自己查一下 shutdown() vs shutdownNow() 的区别
+
+几个关键点提示你留意,自己去补全:
+
+@PreDestroy 这个方法应该写在哪个类里——是写在 ThreadPoolConfig(线程池的创建者),还是写在 ThreadPoolPractice(线程池的使用者)?想一下"谁创造的资源,通常该由谁负责销毁"这个原则,再决定放哪。
+伪代码里我特意留了一句注释"这里不再 executor.shutdown()"——想清楚为什么。原来的代码里 threadPool() 方法自己创建、自己关闭线程池,现在线程池变成了外部注入的共享资源,如果 threadPool() 方法自己把它关了,这个 Bean 之后还能用吗?这是一个很容易漏改、但改错了会导致"线程池用一次就废了"的坑,自己想清楚再落地。
+@PreDestroy 需要什么样的方法签名(有没有参数、返回值要求)?自己查一下这个注解的用法。

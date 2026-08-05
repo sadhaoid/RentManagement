@@ -7,13 +7,25 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 import org.apache.commons.collections4.ListUtils;
 
+//    public static ExecutorService newFixedThreadPool(int nThreads) {
+//        return new ThreadPoolExecutor(nThreads, nThreads,
+//                                      0L, TimeUnit.MILLISECONDS,
+//                                      new LinkedBlockingQueue<Runnable>());
+//    }
+
+
+//    public ThreadPoolExecutor(int corePoolSize,
+//                              int maximumPoolSize,
+//                              long keepAliveTime,
+//                              TimeUnit unit,
+//                              BlockingQueue<Runnable> workQueue) {
+//        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
+//             Executors.defaultThreadFactory(), defaultHandler);
+//    }
 @RequiredArgsConstructor
 public class ThreadPoolPractice {
     private final LeaseContractRepository leaseContractRepository;
@@ -27,6 +39,8 @@ public class ThreadPoolPractice {
      void threadPool () throws InterruptedException {
         // 创建一个固定大小的线程池，线程池大小为4
         ExecutorService executor = Executors.newFixedThreadPool(4);
+
+//        new ThreadPoolExecutor(4, 12, 100000, TimeUnit.SECONDS, List<>(),)
 
         List<List<LeaseContractDo>> lists = partitionContract();
 
