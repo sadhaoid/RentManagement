@@ -3,6 +3,7 @@ package com.example.demo.utils;
 
 import com.example.demo.entity.LeaseContractDo;
 import com.example.demo.reposity.LeaseContractRepository;
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-
 public class ThreadPoolPractice {
     private final LeaseContractRepository leaseContractRepository;
     private final ThreadPoolExecutor threadPoolExecutor;
@@ -26,6 +26,7 @@ public class ThreadPoolPractice {
     ConcurrentLinkedDeque<LeaseContractDo> concurrentCollection = new ConcurrentLinkedDeque<>();
 
 
+    @PostConstruct
      void threadPool() throws InterruptedException {
         // 创建一个固定大小的线程池，线程池大小为4
 
@@ -35,9 +36,15 @@ public class ThreadPoolPractice {
         List<List<LeaseContractDo>> lists = partitionContract();
 
          for (int i = 0; i < lists.size(); i++) {
+             int x = 1/0;
              int finalI = i;
              threadPoolExecutor.submit(() -> {
-                 lists.get(finalI).stream().filter(leaseContractDo -> leaseContractDo.getEndDate().isAfter(validateDate)).forEach(leaseContractDo -> concurrentCollection.add(leaseContractDo));
+                 Long startTime = System.currentTimeMillis();
+                 lists.get(finalI).stream()
+                         .filter(leaseContractDo -> leaseContractDo.getEndDate().isAfter(validateDate))
+                         .forEach(leaseContractDo -> concurrentCollection.add(leaseContractDo));
+                 Long endTime = System.currentTimeMillis();
+                 System.out.printf("线程%d耗时%dms%n", finalI, endTime - startTime);
                  countDownLatch.countDown();
              });
 
