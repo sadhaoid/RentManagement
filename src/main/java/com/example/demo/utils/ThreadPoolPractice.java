@@ -26,8 +26,7 @@ public class ThreadPoolPractice {
     ConcurrentLinkedDeque<LeaseContractDo> concurrentCollection = new ConcurrentLinkedDeque<>();
 
 
-    @PostConstruct
-     void threadPool() throws InterruptedException {
+     public void threadPool() throws InterruptedException {
         // 创建一个固定大小的线程池，线程池大小为4
 
         CountDownLatch countDownLatch = new CountDownLatch(partitionContract().size());
@@ -36,16 +35,26 @@ public class ThreadPoolPractice {
         List<List<LeaseContractDo>> lists = partitionContract();
 
          for (int i = 0; i < lists.size(); i++) {
-             int x = 1/0;
+//             int x = 1/0;
              int finalI = i;
              threadPoolExecutor.submit(() -> {
-                 Long startTime = System.currentTimeMillis();
-                 lists.get(finalI).stream()
-                         .filter(leaseContractDo -> leaseContractDo.getEndDate().isAfter(validateDate))
-                         .forEach(leaseContractDo -> concurrentCollection.add(leaseContractDo));
-                 Long endTime = System.currentTimeMillis();
-                 System.out.printf("线程%d耗时%dms%n", finalI, endTime - startTime);
-                 countDownLatch.countDown();
+                 try {
+                     if (finalI == 0) {
+                         int x = 1 / 0;   // 现在挪进来了，只让第一个分片失败
+                     }
+                     Long startTime = System.currentTimeMillis();
+                     lists.get(finalI).stream()
+                             .filter(leaseContractDo -> leaseContractDo.getEndDate().isAfter(validateDate))
+                             .forEach(leaseContractDo -> concurrentCollection.add(leaseContractDo));
+                     Long endTime = System.currentTimeMillis();
+                     System.out.printf("线程%d耗时%dms%n", finalI, endTime - startTime);
+                 } catch (Exception e) {
+
+                 } finally {
+                     countDownLatch.countDown();
+
+                 }
+
              });
 
          }
